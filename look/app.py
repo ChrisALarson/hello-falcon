@@ -1,7 +1,13 @@
 import falcon
-from .images import Resource
 
-api = application = falcon.API()
+from .images import ImageStore, Resource
 
-images = Resource(storage_path='.')
-api.add_route('/images', images)
+def create_app(image_store):
+    image_resource = Resource(image_store)
+    api = falcon.API()
+    api.add_route('/images', image_resource)
+    return api
+
+def get_app():
+    image_store = ImageStore('.')
+    return create_app(image_store)
